@@ -1,0 +1,15 @@
+.container {
+  background: var(--io-color-card-bg);
+  border-radius: 12px;
+  padding: 18px 24px;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--io-color-bg-text-subtle);
+}

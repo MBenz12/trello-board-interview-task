@@ -1,0 +1,17 @@
+:root {
+  --io-color-bg-normal: hsl(0, 0%, 94%);
+  --io-color-bg-text: hsl(300, 32%, 8%);
+  --io-color-bg-text-subtle: hsl(300, 10%, 37%);
+
+  --io-color-card-bg: hsl(0, 0%, 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --io-color-bg-normal: hsl(0, 0%, 9%);
+    --io-color-bg-text: hsl(0, 0%, 100%);
+    --io-color-bg-text-subtle: hsl(0, 0%, 80%);
+
+    --io-color-card-bg: hsl(0, 0%, 0%);
+  }
+}

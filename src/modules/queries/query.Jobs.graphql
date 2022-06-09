@@ -1,0 +1,7 @@
+query Jobs {
+  jobs {
+    id
+    status
+    createdAt
+  }
+}
