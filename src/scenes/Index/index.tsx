@@ -1,41 +1,52 @@
-import { Status, useJobsQuery } from "../../generated/graphql";
+import { useEffect } from 'react';
+import * as Apollo from '@apollo/client';
+
+import { JobsQuery, JobsQueryVariables, Status, JobsDocument, } from "../../generated/graphql";
 import { Card } from "./Card";
 import { Column } from "./Column";
 
 import styles from "./styles.module.css";
 
-export function Index() {
-  const { data, loading } = useJobsQuery({ pollInterval: 1000 });
+function useJobsQuery() {
+  const { data, error, loading, refetch } = Apollo.useQuery<JobsQuery, JobsQueryVariables>(JobsDocument, {});
+  const toDoJobs = data?.jobs.filter(job => job.status === Status.ToDo);
+  const inProgressJobs = data?.jobs.filter(job => job.status === Status.InProgress);
+  const doneJobs = data?.jobs.filter(job => job.status === Status.Done);
+  return { toDoJobs, inProgressJobs, doneJobs, error, empty: !data, loading, refetch };
+}
 
-  if (!data && loading) {
+export function Index() {
+  const { doneJobs, inProgressJobs, toDoJobs, empty, loading, error, refetch } = useJobsQuery();
+  
+  useEffect(() => {
+    setInterval(() => {
+      refetch();
+    }, 1000);
+  }, []);
+
+  if (empty && loading) {
     return <div>…</div>;
   }
 
-  if (!data) {
+  if (error || empty) {
     return <div>Something went wrong :(</div>;
   }
 
   return (
     <div className={styles.container}>
       <Column>
-        {data.jobs
-          .filter((it) => it.status === Status.ToDo)
-          .map((it) => (
-            <Card {...it} />
+        {toDoJobs?.map((it) => (
+            <Card key={it.id} {...it} />
           ))}
       </Column>
       <Column>
-        {data.jobs
-          .filter((it) => it.status === Status.InProgress)
-          .map((it) => (
-            <Card {...it} />
+        {inProgressJobs?.map((it) => (
+            <Card key={it.id} {...it} />
           ))}
       </Column>
       <Column>
-        {data.jobs
-          .filter((it) => it.status === Status.Done)
-          .map((it) => (
-            <Card {...it} />
+        {doneJobs?.map((it) => (
+            <Card key={it.id} {...it} />
           ))}
       </Column>
     </div>
